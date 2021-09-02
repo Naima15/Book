@@ -21,11 +21,11 @@ const searchBook = () => {
     toggleBookDetail('none');
 
     const searchText = searchField.value;
-   
+
     //clear data
     searchField.value = '';
     document.getElementById('error-messege').style.display = 'none';
-    
+
     //load Data
     const emptyText = document.getElementById('empty-text');
     emptyText.textContent = '';
@@ -45,7 +45,7 @@ const searchBook = () => {
         fetch(url)
             .then(res => res.json())
             .then(data => displaySearchResult(data.docs, data.numFound))
-            
+            .catch(error => displayError(error));
     }
 }
 
@@ -55,24 +55,26 @@ const displayError = error => {
 }
 
 
-const displaySearchResult = docs => {
+const displaySearchResult = (docs, booksNumber) => {
 
     const searchResult = document.getElementById('search-result');
     //clear previuos search data
     //searchResult.innerHTML = '';
     searchResult.textContent = '';
+    const totalBooksAmount = booksNumber;
 
     const noResultFound = document.getElementById('empty-text');
     noResultFound.textContent = '';
-    if (docs.length === 0) {
+    if (totalBooksAmount === 0) {
         noResultFound.textContent = '';
         const p = document.createElement('p');
         p.innerText = `No result found 
         Input valid name
        `;
         p.style.fontSize = '25px';
-        p.style.color = '#A52A2A';
+        p.style.color = 'black';
         p.style.textAlign = 'center';
+        p.style.background = 'green';
         noResultFound.appendChild(p);
         toggleBookDetail('none');
 
@@ -81,10 +83,10 @@ const displaySearchResult = docs => {
         const totalResultFound = document.getElementById('empty-text');
         totalResultFound.textContent = '';
         const p = document.createElement('p');
-        p.innerText = `Total result Found ${docs.length}
+        p.innerText = `Total result Found ${totalBooksAmount}
    `;
         p.style.fontSize = '30px';
-        p.style.color = '#A52A2A';
+        p.style.color = 'blue';
         p.style.textAlign = 'center';
         totalResultFound.appendChild(p);
         searchResult.textContent = '';
@@ -112,6 +114,8 @@ const displaySearchResult = docs => {
     toggleSpinner('none');
     toggleSearchResult('flex');
 }
+
+
 
 const loadBookDetail = bookTitle => {
 
@@ -144,5 +148,5 @@ const displayBookDetail = doc => {
    `;
     bookDetails.appendChild(div);
     toggleBookDetail('block');
-  
+
 }
